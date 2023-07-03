@@ -4,14 +4,14 @@ import os
 from shutil import copyfile
 import pandas as pd
 from tqdm import tqdm
-
-FOLDER = os.path.join("data", "videos")
-
+import pathlib
+FOLDER = str(pathlib.Path.cwd())+ "\\ST\\videos"
 
 def download_video(name, video_id, start_time, duration_time):
     """
     start and end have to be in the format mm:ss
     """
+    
     file_path = os.path.join(FOLDER, name)
     if not os.path.exists(file_path):
         os.mkdir(file_path)
@@ -48,7 +48,7 @@ def download_video(name, video_id, start_time, duration_time):
 print("\nDownloading videos of signs from YouTube\n")
 
 # Create the dataset based on yt_links.csv
-df_links = pd.read_csv("yt_links.csv")
+df_links = pd.read_csv(str(pathlib.Path.cwd())+"\\ST\\yt_links.csv")
 for idx, row in tqdm(df_links.iterrows(), total=df_links.shape[0]):
     download_video(*row)
 
