@@ -27,7 +27,7 @@ def load_dataset():
     if n > 0:
         print(f"\nExtracting landmarks from new videos: {n} videos detected\n")
 
-        for idx in tqdm(range(n)):
+        for idx in range(n):
             save_landmarks_from_video(videos_not_in_dataset[idx])
 
     return videos

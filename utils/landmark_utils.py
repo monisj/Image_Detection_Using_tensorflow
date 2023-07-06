@@ -36,9 +36,9 @@ def extract_landmarks(results):
 
 
 def save_landmarks_from_video(video_name):
-    landmark_list = {"pose": [], "left_hand": [], "right_hand": []}
+    landmark_list = {"left_hand": [], "right_hand": []}
     sign_name = video_name.split("-")[0]
-
+    print(sign_name)
     # Set the Video stream
     cap = cv2.VideoCapture(
         os.path.join("data", "videos", sign_name, video_name + ".mp4")
@@ -53,8 +53,8 @@ def save_landmarks_from_video(video_name):
                 image, results = mediapipe_detection(frame, holistic)
 
                 # Store results
-                pose, left_hand, right_hand = extract_landmarks(results)
-                landmark_list["pose"].append(pose)
+                left_hand, right_hand = extract_landmarks(results)
+                #landmark_list["pose"].append(pose)
                 landmark_list["left_hand"].append(left_hand)
                 landmark_list["right_hand"].append(right_hand)
             else:
@@ -72,9 +72,9 @@ def save_landmarks_from_video(video_name):
         os.mkdir(data_path)
 
     # Saving the landmark_list in the correct folder
-    save_array(
-        landmark_list["pose"], os.path.join(data_path, f"pose_{video_name}.pickle")
-    )
+    # save_array(
+    #     landmark_list["pose"], os.path.join(data_path, f"pose_{video_name}.pickle")
+    # )
     save_array(
         landmark_list["left_hand"], os.path.join(data_path, f"lh_{video_name}.pickle")
     )
