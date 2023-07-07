@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from face_detec_model import Face_Detect_Model
+from models.face_detect_model import Face_Detect_Model
 
 
 class FaceModel(object):
