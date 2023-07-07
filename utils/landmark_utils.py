@@ -34,9 +34,62 @@ def extract_landmarks(results):
         )
     return pose, left_hand, right_hand
 
+def extract_landmarks_face(results):
+    face = np.zeros(63).tolist()
+    face = landmark_to_array(results.left_hand_landmarks).reshape(63).tolist()
+    return face
 
+def save_landmarks_from_video_2(video_name):
+    #landmark_list = {"left_hand": [], "right_hand": []}
+    landmark_list = {"face": []}
+    face_identify = video_name.split("-")[0]
+    print(face_identify)
+    # Set the Video stream
+    cap = cv2.VideoCapture(
+        os.path.join("data", "videos", face_identify, video_name + ".mp4")
+    )
+    with mp.solutions.holistic.Holistic(
+        min_detection_confidence=0.5, min_tracking_confidence=0.5
+    ) as holistic:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                # Make detections
+                image, results = mediapipe_detection(frame, holistic)
+
+                # Store results
+                #left_hand, right_hand = extract_landmarks(results)
+                face = extract_landmarks_face(results)
+                #landmark_list["pose"].append(pose)
+                landmark_list["face"].append(face)
+            else:
+                break
+        cap.release()
+
+    # Create the folder of the sign if it doesn't exists
+    path = os.path.join("data", "dataset", face_identify)
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    # Create the folder of the video data if it doesn't exists
+    data_path = os.path.join(path, video_name)
+    if not os.path.exists(data_path):
+        os.mkdir(data_path)
+
+    # Saving the landmark_list in the correct folder
+    # save_array(
+    #     landmark_list["pose"], os.path.join(data_path, f"pose_{video_name}.pickle")
+    # )
+    save_array(
+        landmark_list["face"], os.path.join(data_path, f"{video_name}.pickle")
+    )
+    # save_array(
+    #     landmark_list["right_hand"], os.path.join(data_path, f"rh_{video_name}.pickle")
+    # )
+    
 def save_landmarks_from_video(video_name):
     landmark_list = {"left_hand": [], "right_hand": []}
+    landmark_list = {"face": []}
     sign_name = video_name.split("-")[0]
     print(sign_name)
     # Set the Video stream

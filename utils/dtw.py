@@ -2,7 +2,7 @@ import pandas as pd
 from fastdtw import fastdtw
 import numpy as np
 from models.sign_model import SignModel
-
+from models.face_model import FaceModel
 
 def dtw_distances(recorded_sign: SignModel, reference_signs: pd.DataFrame):
     """
@@ -39,3 +39,35 @@ def dtw_distances(recorded_sign: SignModel, reference_signs: pd.DataFrame):
         else:
             row["distance"] = np.inf
     return reference_signs.sort_values(by=["distance"])
+
+def dtw_distances_2(recorded_face: FaceModel, reference_face: pd.DataFrame):
+    """
+    Use DTW to compute similarity between the recorded Face & the reference Faces
+
+    :param recorded_face: a FaceModel object containing the data gathered during record
+    :param reference_Face: pd.DataFrame
+                            columns : name, dtype: str
+                                      face_model, dtype: SignModel
+                                      distance, dtype: float64
+    :return: Return a Face dictionary sorted by the distances from the recorded Face
+    """
+    # Embeddings of the recorded Face
+    rec_face = recorded_face.face_embedding
+    
+
+    for idx, row in reference_face.iterrows():
+        # Initialize the row variables
+        ref_face_name, ref_face_model, _ = row
+
+        # If the reference sign has the same number of hands compute fastdtw
+        if (recorded_face.has_face == ref_face_model.has_face):
+            ref_face = ref_face_model.face_embedding
+            
+
+            if recorded_face.has_face:
+                row["distance"] += list(fastdtw(rec_face))[0]
+            
+        # If not, distance equals infinity
+        else:
+            row["distance"] = np.inf
+    return reference_face.sort_values(by=["distance"])
