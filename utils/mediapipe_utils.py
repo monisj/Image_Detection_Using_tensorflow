@@ -12,43 +12,31 @@ def mediapipe_detection(image, model):
 
 
 def draw_landmarks(image, results):
-        mp_face_mesh = mp.solutions.face_mesh
-        face_mesh=mp_face_mesh.FaceMesh(
-            static_image_mode=True,
-            max_num_faces=1,
-            refine_landmarks=True,
-            min_detection_confidence=0.5)
-        mp_holistic = mp.solutions.holistic  # Holistic model
-        mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
-        face_mesh_images = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=2,
-                                         min_detection_confidence=0.5)
-        mp_drawing_styles = mp.solutions.drawing_styles
-        mp_face_mesh = mp.solutions.face_mesh
+    mp_holistic = mp.solutions.holistic  # Holistic model
+    mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
 
-        results=face_mesh.process(image)
-       
-        drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
-        if results.multi_face_landmarks:
-            for face_landmarks in results.multi_face_landmarks:
-                mp_drawing.draw_landmarks(
-                    image=image,
-                    landmark_list=face_landmarks,
-                    connections=mp_face_mesh.FACEMESH_TESSELATION,
-                    landmark_drawing_spec=None,
-                    connection_drawing_spec=mp_drawing_styles
-                    .get_default_face_mesh_tesselation_style())
-                mp_drawing.draw_landmarks(
-                    image=image,
-                    landmark_list=face_landmarks,
-                    connections=mp_face_mesh.FACEMESH_CONTOURS,
-                    landmark_drawing_spec=None,
-                    connection_drawing_spec=mp_drawing_styles
-                    .get_default_face_mesh_contours_style())
-                mp_drawing.draw_landmarks(
-                    image=image,
-                    landmark_list=face_landmarks,
-                    connections=mp_face_mesh.FACEMESH_IRISES,
-                    landmark_drawing_spec=None,
-                    connection_drawing_spec=mp_drawing_styles
-                    .get_default_face_mesh_iris_connections_style())
-        return image
+    # Draw left hand connections
+    image = mp_drawing.draw_landmarks(
+        image,
+        landmark_list=results.left_hand_landmarks,
+        connections=mp_holistic.HAND_CONNECTIONS,
+        landmark_drawing_spec=mp_drawing.DrawingSpec(
+            color=(232, 254, 255), thickness=1, circle_radius=4
+        ),
+        connection_drawing_spec=mp_drawing.DrawingSpec(
+            color=(255, 249, 161), thickness=2, circle_radius=2
+        ),
+    )
+    # Draw right hand connections
+    image = mp_drawing.draw_landmarks(
+        image,
+        landmark_list=results.right_hand_landmarks,
+        connections=mp_holistic.HAND_CONNECTIONS,
+        landmark_drawing_spec=mp_drawing.DrawingSpec(
+            color=(232, 254, 255), thickness=1, circle_radius=4
+        ),
+        connection_drawing_spec=mp_drawing.DrawingSpec(
+            color=(255, 249, 161), thickness=2, circle_radius=2
+        ),
+    )
+    return image

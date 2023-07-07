@@ -16,10 +16,10 @@ class Face_Detect_Model(object):
     def __init__(self, landmarks: List[float]):
 
         # Define the connections
-        self.connections = mp.solutions.facemesh
+        self.connections = mp.solutions.face_mesh
 
         # Create feature vector (list of the angles between all the connections)
-        landmarks = np.array(landmarks).reshape((21, 3))
+        landmarks = np.array(landmarks).reshape((1404,1))
         self.feature_vector = self._get_feature_vector(landmarks)
 
     def _get_feature_vector(self, landmarks: np.ndarray) -> List[float]:
@@ -54,7 +54,7 @@ class Face_Detect_Model(object):
         """
         return list(
             map(
-                lambda t: landmarks[t[1]] - landmarks[t[0]],
+                landmarks,
                 self.connections,
             )
         )

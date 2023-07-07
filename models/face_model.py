@@ -32,10 +32,10 @@ class FaceModel(object):
             the feature_vectors of the hand for each frame
         """
         embedding = []
-        for frame_idx in range(len(face_list)):
+        for frame_idx in range(100):
             if np.sum(face_list[frame_idx]) == 0:
                 continue
 
-            face = FaceModel(face_list[frame_idx])
+            face = Face_Detect_Model(face_list[frame_idx])
             embedding.append(face.feature_vector)
         return embedding

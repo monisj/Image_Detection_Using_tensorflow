@@ -29,7 +29,7 @@ def load_dataset():
         print(f"\nExtracting landmarks from new videos: {n} videos detected\n")
 
         for idx in range(n):
-            save_landmarks_from_video_2(videos_not_in_dataset[idx])
+            save_landmarks_from_video(videos_not_in_dataset[idx])
 
     return videos
 

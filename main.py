@@ -13,13 +13,13 @@ if __name__ == "__main__":
     videos = load_dataset()
 
     # Create a DataFrame of reference signs (name: str, model: SignModel, distance: int)
-    #reference_signs = load_reference_signs(videos)
+    reference_signs = load_reference_signs(videos)
 
     #Create a DataFrame for reference face_moedls
-    reference_signs = load_reference_face(videos)
+    #reference_signs = load_reference_signs(videos)
 
     # Object that stores mediapipe results and computes sign similarities
-    face_recorder = FaceRecorder(reference_signs)
+    sign_recorder = SignRecorder(reference_signs)
 
     # Object that draws keypoints & displays results
     webcam_manager = WebcamManager()
@@ -39,14 +39,14 @@ if __name__ == "__main__":
             image, results = mediapipe_detection(frame, holistic)
 
             # Process results
-            sign_detected, is_recording = face_recorder.process_results(results)
+            sign_detected, is_recording = sign_recorder.process_results(results)
 
             # Update the frame (draw landmarks & display result)
             webcam_manager.update(frame, results, sign_detected, is_recording)
 
             pressedKey = cv2.waitKey(1) & 0xFF
             if pressedKey == ord("r"):  # Record pressing r
-                face_recorder.record()
+                sign_recorder.record()
             elif pressedKey == ord("q"):  # Break pressing q
                 break
 

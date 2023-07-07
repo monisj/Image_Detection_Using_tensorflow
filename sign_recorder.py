@@ -86,5 +86,5 @@ class SignRecorder(object):
 
         predicted_sign, count = sign_counter[0]
         if count / batch_size < threshold:
-            return "Signe inconnu"
+            return "No Face"
         return predicted_sign
